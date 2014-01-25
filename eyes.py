@@ -3,12 +3,25 @@ from pygame.locals import *
 
 import Globals
 from Player import player
+from Floors import floor
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 pygame.init()
 
+coverimage = (pygame.image.load('cover.png'))
+
+def levelup(level):
+    Globals.floors = []
+    if level == 1:
+        Globals.floors.append(floor(400,630,0))
+        Globals.floors.append(floor(250,500,1))
+
+#-------------------------------------------------------------------
+#-------------------------------------------------------------------
+#-------------------------------------------------------------------
+        
 def main():
 
     #main vars
@@ -16,8 +29,15 @@ def main():
     Globals.rightflag = 0
     Globals.upflag = 0
     alive = True
+    complete = True
+    level = 0
 
     while alive == True: #main loop
+        if complete == True:
+            level += 1
+            complete = False
+            levelup(level)
+        
         Globals.DISPLAYSURF.fill(WHITE)
 
         Globals.timeclock += 1
@@ -34,7 +54,7 @@ def main():
                 if (event.key == K_UP):
                    Globals.upflag = 1
                 if (event.key == K_ESCAPE):
-                    alive = false           
+                    alive = False           
             elif event.type == KEYUP:
                 if (event.key == K_LEFT):
                    Globals.leftflag = 0
@@ -44,7 +64,28 @@ def main():
                    Globals.upflag = 0
 
         Globals.play.update()
+        Globals.play.collisions()
         Globals.play.draw()
+        for f in Globals.floors:
+            if f.lit == False:
+                f.draw()
+                
+        if Globals.worldstatus == 1 or Globals.worldstatus == 2:
+            #cover
+            cover = pygame.transform.scale(coverimage,(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT))
+            cover = cover.convert()
+            cover.set_alpha((25*Globals.timeclock % 120 - 109))
+            Globals.DISPLAYSURF.blit(cover, (0,0))
+        if Globals.worldstatus == 3:
+            #cover
+            cover = pygame.transform.scale(coverimage,(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT))
+            cover = cover.convert()
+            cover.set_alpha(255)
+            Globals.DISPLAYSURF.blit(cover, (0,0))
+
+        for f in Globals.floors:
+            if f.lit == True:
+                f.draw()
         
         #end of loop
         pygame.display.update()

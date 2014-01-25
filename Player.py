@@ -21,7 +21,7 @@ class player:
         self.dx = 0
         self.dy = 0
 
-        self.lastdir = 0
+        self.lastdir = 1
         self.imgdir = 1
         
         self.jumping = False
@@ -47,6 +47,19 @@ class player:
         elif self.dx < 0:
             self.lastdir = -1
 
+        if Globals.upflag == 1 and self.jumping == False:
+            self.jumping = True
+            self.dy = Globals.jumpspeed
+
+        self.y = self.y + self.dy
+        #gravity
+        self.dy = min(Globals.tv, self.dy + Globals.gravity)
+
+        if self.x < self.sizex:
+            self.x = self.sizex
+        if self.x > Globals.SCREEN_WIDTH - self.sizex:
+            self.x = Globals.SCREEN_WIDTH - self.sizex            
+
         if Globals.leftflag == 1 and Globals.rightflag == 0:
             self.dx = -Globals.runspeed
         elif Globals.leftflag == 0 and Globals.rightflag == 1:
@@ -57,6 +70,7 @@ class player:
         self.x += self.dx
         self.y += self.dy
         
+        #blinking
         if self.playerlevel == 1:
             if Globals.timeclock % 120 <= 100:
                 self.eyestate = 0
@@ -66,6 +80,9 @@ class player:
                 self.eyestate = 2
             if Globals.timeclock % 120 >= 110:
                 self.eyestate = 3
+
+
+        Globals.worldstatus = self.eyestate
 
         if abs(self.dx) > 0:
             self.legcount += 1
@@ -99,5 +116,20 @@ class player:
         Globals.DISPLAYSURF.blit(self.eyeimage, ((self.x-self.sizex), (self.y-self.sizey))) 
         Globals.DISPLAYSURF.blit(self.legimage, ((self.x-self.sizex), (self.y-self.sizey)))
         
-            
-        
+    def collisions(self):
+        #platforms
+        for f in Globals.floors:
+            if f.lit == True or Globals.worldstatus < 3:
+                if self.eyemask.overlap(f.mask, (int((f.x-f.sizex)-(self.x-self.sizex)), int((f.y-f.sizey)-(self.y-self.sizey)))) != None:
+                    if self.y <= f.y: #ends a jump
+                        self.y = f.y - f.sizey - self.sizey
+                        self.jumping = False
+                    else:
+                        self.y = f.y + f.sizey + self.sizey
+                        self.dy = -self.dy
+                if self.eyemask.overlap(f.mask, (int((f.x-f.sizex)-(self.x-self.sizex)), int((f.y-f.sizey)-(self.y-self.sizey)))) != None:
+                    if self.x <= f.x:
+                        self.x = f.x - f.sizex - self.sizex
+                    else:
+                        self.x = f.x + f.sizex + self.sizex
+                        self.dx = -self.dx
