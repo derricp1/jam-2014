@@ -3,6 +3,7 @@ from pygame.locals import *
 
 from Player import player
 from Floors import floor
+from Goal import goal
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 640
@@ -20,6 +21,10 @@ timeclock = 0
 worldstatus = 0
 
 play = player(320,400)
+goal = goal(100,500)
+hitgoal = True
+restart = False
+died = False
 
 leftflag = 0
 rightflag = 0

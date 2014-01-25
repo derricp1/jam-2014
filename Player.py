@@ -50,15 +50,11 @@ class player:
         if Globals.upflag == 1 and self.jumping == False:
             self.jumping = True
             self.dy = Globals.jumpspeed
+        if self.dy > 0:
+            self.jumping = True
 
-        self.y = self.y + self.dy
         #gravity
-        self.dy = min(Globals.tv, self.dy + Globals.gravity)
-
-        if self.x < self.sizex:
-            self.x = self.sizex
-        if self.x > Globals.SCREEN_WIDTH - self.sizex:
-            self.x = Globals.SCREEN_WIDTH - self.sizex            
+        self.dy = min(Globals.tv, self.dy + Globals.gravity)          
 
         if Globals.leftflag == 1 and Globals.rightflag == 0:
             self.dx = -Globals.runspeed
@@ -69,16 +65,23 @@ class player:
 
         self.x += self.dx
         self.y += self.dy
+        self.y += self.dy
+
+        if self.x < self.sizex:
+            self.x = self.sizex
+        if self.x > Globals.SCREEN_WIDTH - self.sizex:
+            self.x = Globals.SCREEN_WIDTH - self.sizex  
         
         #blinking
         if self.playerlevel == 1:
-            if Globals.timeclock % 120 <= 100:
+            cycleperiod = 100
+            if Globals.timeclock % cycleperiod <= 70:
                 self.eyestate = 0
-            if Globals.timeclock % 120 > 100 and Globals.timeclock % 120 <= 105:
+            if Globals.timeclock % cycleperiod > 70 and Globals.timeclock % cycleperiod <= 75:
                 self.eyestate = 1
-            if Globals.timeclock % 120 > 105 and Globals.timeclock % 120 <= 110:
+            if Globals.timeclock % cycleperiod > 75 and Globals.timeclock % cycleperiod <= 80:
                 self.eyestate = 2
-            if Globals.timeclock % 120 >= 110:
+            if Globals.timeclock % cycleperiod >= 80:
                 self.eyestate = 3
 
 
@@ -110,6 +113,9 @@ class player:
         sizes = self.eyemask.get_size()
         self.sizex = sizes[0]/2.0
         self.sizey = sizes[1]/2.0
+
+        if self.y > Globals.SCREEN_HEIGHT: #safety
+            Globals.restart = True
                 
 
     def draw(self):
@@ -121,15 +127,25 @@ class player:
         for f in Globals.floors:
             if f.lit == True or Globals.worldstatus < 3:
                 if self.eyemask.overlap(f.mask, (int((f.x-f.sizex)-(self.x-self.sizex)), int((f.y-f.sizey)-(self.y-self.sizey)))) != None:
-                    if self.y <= f.y: #ends a jump
+                    if self.y <= f.y and self.dy > 0: #ends a jump
                         self.y = f.y - f.sizey - self.sizey
                         self.jumping = False
-                    else:
+                        self.dy = 0
+                        if f.deadly == True:
+                            Globals.died = True
+                    elif self.y >= f.y and self.dy < 0:
                         self.y = f.y + f.sizey + self.sizey
-                        self.dy = -self.dy
+                        self.dy = -0.5 * self.dy
+                        
                 if self.eyemask.overlap(f.mask, (int((f.x-f.sizex)-(self.x-self.sizex)), int((f.y-f.sizey)-(self.y-self.sizey)))) != None:
-                    if self.x <= f.x:
+                    if self.x <= f.x and self.dx > 0:
                         self.x = f.x - f.sizex - self.sizex
-                    else:
+                        if f.deadly == True:
+                            Globals.died = True
+                    elif self.x >= f.x and self.dx < 0:
                         self.x = f.x + f.sizex + self.sizex
-                        self.dx = -self.dx
+                        if f.deadly == True:
+                            Globals.died = True
+
+        if self.eyemask.overlap(Globals.goal.mask, (int((Globals.goal.x-Globals.goal.sizex)-(self.x-self.sizex)), int((Globals.goal.y-Globals.goal.sizey)-(self.y-self.sizey)))) != None:
+            Globals.hitgoal = True

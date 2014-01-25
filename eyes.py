@@ -15,8 +15,40 @@ coverimage = (pygame.image.load('cover.png'))
 def levelup(level):
     Globals.floors = []
     if level == 1:
-        Globals.floors.append(floor(400,630,0))
-        Globals.floors.append(floor(250,500,1))
+        Globals.play.x = 700
+        Globals.play.y = 550
+        Globals.goal.x = 100
+        Globals.goal.y = 550
+        Globals.floors.append(floor(400,625,0))
+        Globals.floors.append(floor(400,570,3))
+    if level == 2:
+        Globals.play.x = 700
+        Globals.play.y = 550
+        Globals.goal.x = 100
+        Globals.goal.y = 550
+        Globals.floors.append(floor(400,625,0))
+        Globals.floors.append(floor(400,595,2))
+        Globals.floors.append(floor(300,595,2))
+        Globals.floors.append(floor(500,595,2))
+        Globals.floors.append(floor(330,530,4))
+        Globals.floors.append(floor(470,530,4))
+    if level == 3:
+        Globals.play.x = 700
+        Globals.play.y = 550
+        Globals.goal.x = 260
+        Globals.goal.y = 180        
+        Globals.floors.append(floor(400,625,0))
+        Globals.floors.append(floor(550,520,1))
+        Globals.floors.append(floor(400,450,1))
+        Globals.floors.append(floor(250,380,1))
+        Globals.floors.append(floor(100,310,1))
+        Globals.floors.append(floor(260,230,4))
+        Globals.floors.append(floor(50,595,2))
+        Globals.floors.append(floor(150,595,2))
+        Globals.floors.append(floor(250,595,2))
+        Globals.floors.append(floor(350,595,2))
+        Globals.floors.append(floor(450,595,2))
+        
 
 #-------------------------------------------------------------------
 #-------------------------------------------------------------------
@@ -29,16 +61,22 @@ def main():
     Globals.rightflag = 0
     Globals.upflag = 0
     alive = True
-    complete = True
-    level = 0
+    level = 2
 
     while alive == True: #main loop
-        if complete == True:
-            level += 1
-            complete = False
+        if Globals.hitgoal == True or Globals.restart == True or Globals.died == True:
+
+            if Globals.hitgoal == True:
+                level = min(3, level + 1) #should iterate
+            
+            Globals.hitgoal = False
+            Globals.restart = False
+            Globals.died = False
+            Globals.timeclock = 0
+            
             levelup(level)
         
-        Globals.DISPLAYSURF.fill(WHITE)
+        Globals.DISPLAYSURF.fill(WHITE) #bg
 
         Globals.timeclock += 1
 
@@ -62,10 +100,11 @@ def main():
                    Globals.rightflag = 0
                 if (event.key == K_UP):
                    Globals.upflag = 0
-
-        Globals.play.update()
-        Globals.play.collisions()
-        Globals.play.draw()
+                   
+        Globals.goal.update()
+        Globals.goal.draw()
+        Globals.goal.collisions()
+        
         for f in Globals.floors:
             if f.lit == False:
                 f.draw()
@@ -82,6 +121,10 @@ def main():
             cover = cover.convert()
             cover.set_alpha(255)
             Globals.DISPLAYSURF.blit(cover, (0,0))
+
+        Globals.play.update()
+        Globals.play.collisions()
+        Globals.play.draw()
 
         for f in Globals.floors:
             if f.lit == True:
