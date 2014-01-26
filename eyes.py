@@ -33,7 +33,7 @@ def levelup(level):
     Globals.enemies = []
     if level == 1:
         Globals.play.x = 700
-        Globals.play.y = 550
+        Globals.play.y = 520
         Globals.goal.x = 100
         Globals.goal.y = 550
         Globals.play.lastdir = -1
@@ -42,7 +42,7 @@ def levelup(level):
         Globals.floors.append(floor(400,570,3))
     if level == 2:
         Globals.play.x = 700
-        Globals.play.y = 550
+        Globals.play.y = 520
         Globals.goal.x = 100
         Globals.goal.y = 550
         Globals.play.lastdir = -1
@@ -55,7 +55,7 @@ def levelup(level):
         Globals.floors.append(floor(470,530,4))
     if level == 3:
         Globals.play.x = 700
-        Globals.play.y = 540
+        Globals.play.y = 520
         Globals.goal.x = 700
         Globals.goal.y = 0
         Globals.play.lastdir = -1
@@ -67,7 +67,7 @@ def levelup(level):
         Globals.floors.append(floor(600,105,7))
     if level == 4:
         Globals.play.x = 700
-        Globals.play.y = 540
+        Globals.play.y = 520
         Globals.play.lastdir = -1
         Globals.play.imgdir = -1
         Globals.goal.x = 50
@@ -88,7 +88,7 @@ def levelup(level):
         Globals.floors.append(floor(50,100,8))
     if level == 5:
         Globals.play.x = 700
-        Globals.play.y = 550
+        Globals.play.y = 520
         Globals.play.lastdir = -1
         Globals.play.imgdir = -1
         Globals.goal.x = 100
@@ -111,7 +111,7 @@ def levelup(level):
         Globals.floors.append(floor(350,105,1))
     if level == 6:
         Globals.play.x = 700
-        Globals.play.y = 550
+        Globals.play.y = 520
         Globals.play.lastdir = -1
         Globals.play.imgdir = -1
         Globals.goal.x = 260
@@ -129,7 +129,7 @@ def levelup(level):
         Globals.floors.append(floor(450,595,2))
     if level == 7:
         Globals.play.x = 80
-        Globals.play.y = 450
+        Globals.play.y = 440
         Globals.play.lastdir = 1
         Globals.play.imgdir = 1
         Globals.goal.x = 80
@@ -152,7 +152,7 @@ def levelup(level):
         Globals.play.playerlevel = 2
         Globals.cycleperiod = 60
         Globals.play.x = 30
-        Globals.play.y = 550
+        Globals.play.y = 520
         Globals.play.lastdir = 1
         Globals.play.imgdir = 1
         Globals.goal.x = 150
@@ -181,7 +181,7 @@ def levelup(level):
         Globals.play.playerlevel = 2
         Globals.cycleperiod = 60
         Globals.play.x = 30
-        Globals.play.y = 550
+        Globals.play.y = 520
         Globals.play.lastdir = 1
         Globals.play.imgdir = 1
         Globals.goal.x = 50
@@ -203,10 +203,10 @@ def levelup(level):
         Globals.floors.append(floor(50,-540,8))
     if level == 10:        
         Globals.timer = 0
-        Globals.play.playerlevel = 3
+        Globals.play.playerlevel = 2
         Globals.cycleperiod = 60
         Globals.play.x = 30
-        Globals.play.y = 550
+        Globals.play.y = 520
         Globals.goal.x = 620
         Globals.goal.y = -250
         Globals.play.lastdir = 1
@@ -231,13 +231,13 @@ def levelup(level):
         Globals.floors.append(floor(400,310,13))
         Globals.floors.append(floor(100,255,14))
         Globals.floors.append(floor(700,255,14))
-        Globals.floors.append(floor(30,310,9))
+        Globals.floors.append(floor(30,310,8))
         Globals.floors.append(floor(30,180,9))
         Globals.floors.append(floor(30,50,9))
         Globals.floors.append(floor(400,50,13))
         Globals.floors.append(floor(100,-5,14))
         Globals.floors.append(floor(700,-5,14))
-        Globals.floors.append(floor(770,50,9))
+        Globals.floors.append(floor(770,50,8))
         Globals.floors.append(floor(770,-80,9))
         Globals.floors.append(floor(770,-210,9))
         Globals.floors.append(floor(620,-210,8))
@@ -246,7 +246,7 @@ def levelup(level):
         Globals.play.playerlevel = 3
         Globals.cycleperiod = 60
         Globals.play.x = 30
-        Globals.play.y = 550
+        Globals.play.y = 520
         Globals.goal.x = 30
         Globals.goal.y = 20
         Globals.play.lastdir = 1
@@ -285,7 +285,8 @@ def main():
     Globals.upflag = 0
     Globals.alive = True
     Globals.level = 0
-    Globals.lives = 3 #don't run out!
+    if Globals.lives != 30:
+        Globals.lives = 3 #don't run out!
     Globals.abort = False
 
     while Globals.alive == True: #main loop
@@ -332,8 +333,8 @@ def main():
                     if (event.key == K_UP):
                        Globals.upflag = 1
                     if (event.key == K_ESCAPE):
-                        alive = False
-                        abort = True
+                        Globals.alive = False
+                        Globals.abort = True
                 elif event.type == KEYUP:
                     if (event.key == K_LEFT):
                        Globals.leftflag = 0
@@ -450,6 +451,7 @@ def rules():
 #main menu
 d = 0
 frame = 0
+code = 0
 
 while d == 0:
     Globals.DISPLAYSURF.fill(BLACK)
@@ -474,7 +476,17 @@ while d == 0:
             if (event.key == K_ESCAPE):
                 d = -1
             if (event.key == K_r):
-                rules()              
+                rules()
+            if (event.key == K_k):
+                if code == 0:
+                    code = 1
+            if (event.key == K_e):
+                if code == 1:
+                    code = 2
+            if (event.key == K_y):
+                if code == 2:
+                    Globals.lives = 30
+                
 
     frame += 1
     pygame.display.update()
