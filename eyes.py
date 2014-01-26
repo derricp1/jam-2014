@@ -27,7 +27,6 @@ ruletop = (pygame.image.load('rules.png'))
 rulebottom = (pygame.image.load('rulestext.png'))
 
 life = (pygame.image.load('life.png'))
-back = (pygame.image.load('back.png'))
 
 def levelup(level):
     Globals.floors = []
@@ -279,8 +278,6 @@ def levelup(level):
 #-------------------------------------------------------------------
         
 def main():
-
-    pygame.mixer.music.load('jump.ogg')
 
     #main vars
     Globals.leftflag = 0

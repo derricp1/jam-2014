@@ -46,7 +46,6 @@ class player:
         if Globals.upflag == 1 and self.jumping == False:
             self.jumping = True
             self.dy = Globals.jumpspeed
-            pygame.mixer.music.play()
         if self.dy > 0:
             self.jumping = True
 
