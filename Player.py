@@ -41,6 +41,8 @@ class player:
         self.playerlevel = 1
         self.legcount = 0
 
+        self.drop = False
+
     def update(self):
 
         if Globals.upflag == 1 and self.jumping == False:
@@ -71,6 +73,14 @@ class player:
         #blinking
         if self.playerlevel == 1:
             Globals.cycleperiod = 60
+            if Globals.timeclock % Globals.cycleperiod == 0:
+                if self.drop == True:
+                    Globals.cycleperiod = max(1, Globals.cycleperiod - 1)
+                    while Globals.timeclock % Globals.cycleperiod != 0:
+                       Globals.timeclock += 1
+                    self.drop = False
+                else:
+                    self.drop == True
         if self.playerlevel == 2:
             if Globals.timeclock % Globals.cycleperiod == 0:
                 Globals.cycleperiod = max(1, Globals.cycleperiod - 1)

@@ -1,8 +1,0 @@
-(platforming tropes...?)
-blinking
-
-Blinking:
-- Phasing in and out
-- Exaustion makes things uninteligible (enemies, text)
-- Slowing, weakening
-- Dream state

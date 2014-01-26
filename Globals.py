@@ -38,4 +38,9 @@ enemies = []
 
 timer = -1
 cycleperiod = 60
+
+alive = True
+level = 0
+lives = 3 #don't run out!
+abort = False
         

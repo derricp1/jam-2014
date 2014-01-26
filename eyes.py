@@ -283,19 +283,20 @@ def main():
     Globals.leftflag = 0
     Globals.rightflag = 0
     Globals.upflag = 0
-    alive = True
-    level = 0
-    lives = 3 #don't run out!
-    abort = False
+    Globals.alive = True
+    Globals.level = 0
+    Globals.lives = 3 #don't run out!
+    Globals.abort = False
 
-    while alive == True: #main loop
+    while Globals.alive == True: #main loop
         if Globals.hitgoal == True or Globals.restart == True or Globals.died == True:
 
             if Globals.hitgoal == True:
-                level = level + 1 #should iterate
+                Globals.level = Globals.level + 1 #should iterate
             else:
-                lives -= 1
-            
+                Globals.lives -= 1
+
+            Globals.play.drop = False
             Globals.hitgoal = False
             Globals.restart = False
             Globals.died = False
@@ -308,13 +309,12 @@ def main():
                 Globals.timer = 0
             Globals.cycleperiod = 60
             
-            
-            if lives == 0 or level > 11:
-                alive = False
-            else:
-                levelup(level)
 
-        if alive == True:
+            levelup(Globals.level)
+            if Globals.lives == 0 or Globals.level > 11:
+                Globals.alive = False
+
+        if Globals.alive == True:
             Globals.DISPLAYSURF.fill(WHITE) #bg
 
             Globals.timeclock += 1
@@ -383,9 +383,9 @@ def main():
 
             #draw life
             Globals.DISPLAYSURF.blit(life, (0,0))                
-            if lives > 1:
+            if Globals.lives > 1:
                 Globals.DISPLAYSURF.blit(life, (80,0))
-            if lives > 2:
+            if Globals.lives > 2:
                 Globals.DISPLAYSURF.blit(life, (160,0))
             
             #end of loop
@@ -395,8 +395,8 @@ def main():
 
     #display the fail or win screen
     d = 0
-    while d == 0 and abort == False:
-        if lives == 0:
+    while d == 0 and Globals.abort == False:
+        if Globals.lives == 0:
             Globals.DISPLAYSURF.blit(end1, (0,0))
         else:
             Globals.DISPLAYSURF.blit(end2, (0,0))
@@ -405,12 +405,12 @@ def main():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
+                return(0)
             elif event.type == KEYDOWN:
-                if (event.key == K_r):
-                    d = 1
                 if (event.key == K_ESCAPE):
                     pygame.quit()
                     sys.exit()
+                    return(0)
 
         pygame.display.update()
         #print "FPS:", Globals.fpsClock.get_fps()
@@ -425,8 +425,8 @@ def rules():
 
     while d == 0:
         Globals.DISPLAYSURF.fill(BLACK)
-        Globals.DISPLAYSURF.blit(ruletop, (0,0))    
-        Globals.DISPLAYSURF.blit(rulebottom, (0,320)) 
+        Globals.DISPLAYSURF.blit(ruletop, (0,-80))    
+        Globals.DISPLAYSURF.blit(rulebottom, (0,240)) 
         
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -434,11 +434,11 @@ def rules():
                 sys.exit()
             elif event.type == KEYDOWN:
                 if (event.key == K_r):
-                    d = 1
+                   d = 1
                 if (event.key == K_ESCAPE):
                     pygame.quit()
                     sys.exit()
-                    
+
         pygame.display.update()
         #print "FPS:", Globals.fpsClock.get_fps()
         Globals.fpsClock.tick(Globals.FPS)
