@@ -18,6 +18,8 @@ images.append(pygame.image.load('floor9.png'))
 images.append(pygame.image.load('floor10.png'))
 images.append(pygame.image.load('floor11.png'))
 images.append(pygame.image.load('floor12.png'))
+images.append(pygame.image.load('floor13.png'))
+images.append(pygame.image.load('floor14.png'))
 
 class floor:
     def __init__(self, nx, ny, ft):
@@ -38,7 +40,7 @@ class floor:
         self.deadly = False
         self.lit = False
         
-        if self.ftype == 0 or self.ftype == 10 or self.ftype == 3 or self.ftype == 2 or self.ftype == 4 or self.ftype == 5 or self.ftype == 7 or self.ftype == 8:
+        if self.ftype == 0 or self.ftype == 13 or self.ftype == 14 or self.ftype == 10 or self.ftype == 3 or self.ftype == 2 or self.ftype == 4 or self.ftype == 5 or self.ftype == 7 or self.ftype == 8:
             self.lit = True
         else:
             self.lit = False

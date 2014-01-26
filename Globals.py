@@ -35,4 +35,7 @@ upflag = 0
 
 floors = []
 enemies = []
+
+timer = -1
+cycleperiod = 60
         

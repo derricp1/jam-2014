@@ -42,14 +42,11 @@ class player:
         self.legcount = 0
 
     def update(self):
-        if self.dx > 0:
-            self.lastdir = 1
-        elif self.dx < 0:
-            self.lastdir = -1
 
         if Globals.upflag == 1 and self.jumping == False:
             self.jumping = True
             self.dy = Globals.jumpspeed
+            pygame.mixer.music.play()
         if self.dy > 0:
             self.jumping = True
 
@@ -74,16 +71,26 @@ class player:
         
         #blinking
         if self.playerlevel == 1:
-            cycleperiod = 60
-            if Globals.timeclock % cycleperiod <= 42:
-                self.eyestate = 0
-            if Globals.timeclock % cycleperiod > 42 and Globals.timeclock % cycleperiod <= 45:
-                self.eyestate = 1
-            if Globals.timeclock % cycleperiod > 45 and Globals.timeclock % cycleperiod <= 48:
-                self.eyestate = 2
-            if Globals.timeclock % cycleperiod > 48:
-                self.eyestate = 3
-
+            Globals.cycleperiod = 60
+        if self.playerlevel == 2:
+            if Globals.timeclock % Globals.cycleperiod == 0:
+                Globals.cycleperiod = max(1, Globals.cycleperiod - 1)
+                while Globals.timeclock % Globals.cycleperiod != 0:
+                   Globals.timeclock += 1
+        if self.playerlevel == 3:
+            if Globals.timeclock % Globals.cycleperiod == 0:
+                Globals.cycleperiod = max(1, Globals.cycleperiod - 2)
+                while Globals.timeclock % Globals.cycleperiod != 0:
+                   Globals.timeclock += 1
+                
+        if Globals.timeclock % Globals.cycleperiod <= Globals.cycleperiod - 18:
+            self.eyestate = 0
+        if Globals.timeclock % Globals.cycleperiod > Globals.cycleperiod - 18 and Globals.timeclock % Globals.cycleperiod <= Globals.cycleperiod - 15:
+            self.eyestate = 1
+        if Globals.timeclock % Globals.cycleperiod > Globals.cycleperiod - 15 and Globals.timeclock % Globals.cycleperiod <= Globals.cycleperiod - 12:
+            self.eyestate = 2
+        if Globals.timeclock % Globals.cycleperiod > Globals.cycleperiod - 12:
+            self.eyestate = 3
 
         Globals.worldstatus = self.eyestate
 
@@ -116,6 +123,11 @@ class player:
 
         if self.y > Globals.SCREEN_HEIGHT: #safety
             Globals.restart = True
+
+        if self.dx > 0:
+            self.lastdir = 1
+        elif self.dx < 0:
+            self.lastdir = -1
                 
 
     def draw(self):

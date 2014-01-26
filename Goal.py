@@ -18,8 +18,7 @@ class goal:
         self.sizey = sizes[1]/2.0
 
     def draw(self):
-        if self.y-self.sizey+Globals.OFFSET >= 0 and self.y-self.sizey+Globals.OFFSET <= Globals.SCREEN_HEIGHT:
-            Globals.DISPLAYSURF.blit(self.image, ((self.x-self.sizex), (self.y-self.sizey+Globals.OFFSET))) 
+        Globals.DISPLAYSURF.blit(self.image, ((self.x-self.sizex), (self.y-self.sizey+Globals.OFFSET))) 
 
     def update(self):
         self.dy = min(Globals.tv, self.dy + Globals.gravity)

@@ -51,8 +51,7 @@ class enemy:
                 self.x += self.dx
 
     def draw(self):
-        if self.y-self.sizey+Globals.OFFSET >= 0 and self.y-self.sizey+Globals.OFFSET <= Globals.SCREEN_HEIGHT:
-            Globals.DISPLAYSURF.blit(self.image, ((self.x-self.sizex), (self.y-self.sizey+Globals.OFFSET))) 
+        Globals.DISPLAYSURF.blit(self.image, ((self.x-self.sizex), (self.y-self.sizey+Globals.OFFSET))) 
 
     def collisions(self):
         #platforms
