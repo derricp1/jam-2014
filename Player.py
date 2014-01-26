@@ -74,14 +74,14 @@ class player:
         
         #blinking
         if self.playerlevel == 1:
-            cycleperiod = 100
-            if Globals.timeclock % cycleperiod <= 70:
+            cycleperiod = 60
+            if Globals.timeclock % cycleperiod <= 42:
                 self.eyestate = 0
-            if Globals.timeclock % cycleperiod > 70 and Globals.timeclock % cycleperiod <= 75:
+            if Globals.timeclock % cycleperiod > 42 and Globals.timeclock % cycleperiod <= 45:
                 self.eyestate = 1
-            if Globals.timeclock % cycleperiod > 75 and Globals.timeclock % cycleperiod <= 80:
+            if Globals.timeclock % cycleperiod > 45 and Globals.timeclock % cycleperiod <= 48:
                 self.eyestate = 2
-            if Globals.timeclock % cycleperiod >= 80:
+            if Globals.timeclock % cycleperiod > 48:
                 self.eyestate = 3
 
 
@@ -119,33 +119,27 @@ class player:
                 
 
     def draw(self):
-        Globals.DISPLAYSURF.blit(self.eyeimage, ((self.x-self.sizex), (self.y-self.sizey))) 
-        Globals.DISPLAYSURF.blit(self.legimage, ((self.x-self.sizex), (self.y-self.sizey)))
+        Globals.DISPLAYSURF.blit(self.eyeimage, ((self.x-self.sizex), (self.y-self.sizey+Globals.OFFSET))) 
+        Globals.DISPLAYSURF.blit(self.legimage, ((self.x-self.sizex), (self.y-self.sizey+Globals.OFFSET)))
         
     def collisions(self):
         #platforms
         for f in Globals.floors:
             if f.lit == True or Globals.worldstatus < 3:
                 if self.eyemask.overlap(f.mask, (int((f.x-f.sizex)-(self.x-self.sizex)), int((f.y-f.sizey)-(self.y-self.sizey)))) != None:
-                    if self.y <= f.y and self.dy > 0: #ends a jump
+                    if self.y <= f.y-f.sizey and ((self.x+self.sizex >= f.x-f.sizex and f.dx >= 0) or (f.x-self.sizex <= f.x+f.sizex and self.dx <= 0)): #trying to land on top
                         self.y = f.y - f.sizey - self.sizey
-                        self.jumping = False
                         self.dy = 0
                         if f.deadly == True:
-                            Globals.died = True
-                    elif self.y >= f.y and self.dy < 0:
+                           Globals.died = True
+                        self.jumping = False
+                    elif self.y >= f.y+f.sizey and ((self.x+self.sizex >= f.x-f.sizex and self.dx >= 0) or (self.x-self.sizex <= f.x+f.sizex and self.dx <= 0)): #trying to bounce off bottom
                         self.y = f.y + f.sizey + self.sizey
-                        self.dy = -0.5 * self.dy
-                        
-                if self.eyemask.overlap(f.mask, (int((f.x-f.sizex)-(self.x-self.sizex)), int((f.y-f.sizey)-(self.y-self.sizey)))) != None:
-                    if self.x <= f.x and self.dx > 0:
+                        self.dy = 0
+                    elif (self.y > f.y-f.sizey or self.y < f.y+f.sizey) and (self.x + self.sizex > f.x - f.sizex and self.x <= f.x) and self.dx >= 0:
                         self.x = f.x - f.sizex - self.sizex
-                        if f.deadly == True:
-                            Globals.died = True
-                    elif self.x >= f.x and self.dx < 0:
-                        self.x = f.x + f.sizex + self.sizex
-                        if f.deadly == True:
-                            Globals.died = True
+                    elif (self.y > f.y-f.sizey or self.y < f.y+f.sizey) and (self.x - self.sizex < f.x + f.sizex and self.x >= f.x) and self.dx <= 0:
+                        self.x = f.x + f.sizex + self.sizex       
 
         if self.eyemask.overlap(Globals.goal.mask, (int((Globals.goal.x-Globals.goal.sizex)-(self.x-self.sizex)), int((Globals.goal.y-Globals.goal.sizey)-(self.y-self.sizey)))) != None:
             Globals.hitgoal = True
