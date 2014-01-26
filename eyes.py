@@ -18,6 +18,7 @@ titleimages.append(pygame.image.load('title0.png'))
 titleimages.append(pygame.image.load('title1.png'))
 titleimages.append(pygame.image.load('title2.png'))
 titleimages.append(pygame.image.load('title3.png'))
+titlebottom = (pygame.image.load('titletext.png'))
 
 ruletop = (pygame.image.load('rules.png'))
 rulebottom = (pygame.image.load('rulestext.png'))
@@ -248,9 +249,8 @@ def rules():
 
     while d == 0:
         Globals.DISPLAYSURF.fill(BLACK)
-        for x in range(len(r)):
-            Globals.DISPLAYSURF.blit(ruletop, (0,0))    
-            Globals.DISPLAYSURF.blit(ruletop, (0,400)) 
+        Globals.DISPLAYSURF.blit(ruletop, (0,0))    
+        Globals.DISPLAYSURF.blit(rulebottom, (0,320)) 
         
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -273,16 +273,20 @@ def rules():
 
 #main menu
 d = 0
-menutext = "SPACE to begin, ESC to quit, R for rules"
-font = pygame.font.Font(None, 48)
+frame = 0
 
 while d == 0:
     Globals.DISPLAYSURF.fill(BLACK)
-    text = font.render(menutext, 1, WHITE)
-    textpos = text.get_rect()
-    textpos.centerx = (Globals.DISPLAYSURF.get_rect().centerx)
-    textpos.centery = (Globals.DISPLAYSURF.get_rect().centery)*1.5
-    Globals.DISPLAYSURF.blit(text, textpos)    
+    if frame % 300 < 120:
+        Globals.DISPLAYSURF.blit(titleimages[0], (0,0))
+    elif frame % 300 < 180:
+        Globals.DISPLAYSURF.blit(titleimages[1], (0,0))
+    elif frame % 300 < 240:
+        Globals.DISPLAYSURF.blit(titleimages[2], (0,0))
+    else:
+        Globals.DISPLAYSURF.blit(titleimages[3], (0,0)) 
+    
+    Globals.DISPLAYSURF.blit(titlebottom, (0,320))    
     
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -296,6 +300,7 @@ while d == 0:
             if (event.key == K_r):
                 rules()              
 
+    frame += 1
     pygame.display.update()
     #print "FPS:", Globals.fpsClock.get_fps()
     Globals.fpsClock.tick(Globals.FPS)
